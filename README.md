@@ -33,3 +33,6 @@ python "ZO-FL Server-Side LoRA Scaling.py" \
 * fp16 base model: omit `--quant`
 * `--batch-size` (default 16) and `--max-len` (default 192) set the batch size and prompt length of the forward pass.
 * `--device` selects the device (default: CUDA if available).
+
+## Adapter Format
+A PyTorch `.pt` file holding a dict of tensors. For each adapted layer, `<module path>.lora_A` has shape `(r, in_features)` and `<module path>.lora_B` has shape `(out_features, r)`, where `<module path>` is the layer's name in the base model, e.g. `model.decoder.layers.0.self_attn.q_proj`. The LoRA scaling `alpha / r` is 1 by default; set `--lora-alpha` if the adapter was trained with a different `alpha`.
