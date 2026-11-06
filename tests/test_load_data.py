@@ -19,3 +19,10 @@ def test_rejects_out_of_range_labels(sls, tmp_path):
     data = _write(tmp_path / "d.jsonl", [{"sentence": "x", "label": 2}])
     with pytest.raises(SystemExit):
         sls.load_data(data, "{sentence}", 2)
+
+
+def test_rejects_empty_file(sls, tmp_path):
+    data = tmp_path / "d.jsonl"
+    data.write_text("\n\n", encoding="utf-8")
+    with pytest.raises(SystemExit):
+        sls.load_data(str(data), "{sentence}", 2)
