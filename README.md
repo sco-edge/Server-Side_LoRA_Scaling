@@ -36,3 +36,10 @@ python "ZO-FL Server-Side LoRA Scaling.py" \
 
 ## Adapter Format
 A PyTorch `.pt` file holding a dict of tensors. For each adapted layer, `<module path>.lora_A` has shape `(r, in_features)` and `<module path>.lora_B` has shape `(out_features, r)`, where `<module path>` is the layer's name in the base model, e.g. `model.decoder.layers.0.self_attn.q_proj`. The LoRA scaling `alpha / r` is 1 by default; set `--lora-alpha` if the adapter was trained with a different `alpha`.
+
+## Validation Data Format
+A JSON Lines file with one example per line: the task's text fields and an integer `label` from `0` to `number of classes - 1`.
+```json
+{"sentence": "A warm, funny film that never loses its heart.", "label": 1}
+```
+Use `--task` for a built-in task, or `--template` and `--label-words` for any other task. See [examples](examples).
