@@ -55,3 +55,8 @@ Use `--task` for a built-in task, or `--template` and `--label-words` for any ot
 | `agnews` | `{text}\nTopic:` | World, Sports, Business, Technology |
 
 Each label word is preceded by a space.
+
+## Method
+1. Attach the aggregated adapter to the base model with a shared scale `s`.
+2. Run one forward pass with forward-mode automatic differentiation (a JVP) to get the class scores `z(1)` and their derivative `dz/ds` at `s = 1`. A class score is the log-probability of the class's label word after the prompt.
+3. Linearize the scores, `z(s) ~ z(1) + (s - 1) dz/ds`, compute the cross-entropy on them exactly, and return the minimizer of this convex approximate loss.
