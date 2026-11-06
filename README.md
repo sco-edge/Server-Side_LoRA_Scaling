@@ -75,3 +75,6 @@ pip install -r requirements-dev.txt
 pytest
 ```
 The tests cover the scaling-factor computation, data loading, and argument checks, and run without PyTorch.
+
+## License
+MIT License. Copyright (c) 2026 Gachon University Industry-Academic Cooperation Foundation. See [LICENSE](LICENSE).
