@@ -1,5 +1,7 @@
 # Server-Side LoRA Scaling
 
+[![CI](https://github.com/sco-edge/Server-Side_LoRA_Scaling/actions/workflows/ci.yml/badge.svg)](https://github.com/sco-edge/Server-Side_LoRA_Scaling/actions/workflows/ci.yml)
+
 ## Overview
 This project estimates the scaling factor of the aggregated LoRA adapter for each base model on the server with a single JVP, for zeroth-order federated fine-tuning across heterogeneously quantized base models.
 
