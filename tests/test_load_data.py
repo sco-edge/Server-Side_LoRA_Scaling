@@ -26,3 +26,9 @@ def test_rejects_empty_file(sls, tmp_path):
     data.write_text("\n\n", encoding="utf-8")
     with pytest.raises(SystemExit):
         sls.load_data(str(data), "{sentence}", 2)
+
+
+def test_keeps_non_string_fields(sls, tmp_path):
+    data = _write(tmp_path / "d.jsonl", [{"text": " a ", "n": 3, "label": 0}])
+    prompts, _ = sls.load_data(data, "{text} n={n}", 2)
+    assert prompts == ["a n=3"]
