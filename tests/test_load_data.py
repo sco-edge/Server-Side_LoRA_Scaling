@@ -46,3 +46,9 @@ def test_example_files_load(sls, task):
     template, words = sls.TASKS[task]
     prompts, y = sls.load_data(str(EXAMPLES / f"{task}.jsonl"), template, len(words))
     assert prompts and len(prompts) == len(y)
+
+
+def test_custom_example_loads(sls):
+    prompts, y = sls.load_data(str(EXAMPLES / "custom.jsonl"), "Review: {review} Sentiment:", 2)
+    assert prompts[0].startswith("Review: ") and prompts[0].endswith(" Sentiment:")
+    assert set(y.tolist()) == {0, 1}
