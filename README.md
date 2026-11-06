@@ -13,3 +13,9 @@ This project estimates the scaling factor of the aggregated LoRA adapter for eac
    * Aggregated LoRA adapter (FedAvg)
 * Output:
    * Scaling factor
+
+## Requirements
+* Python 3.10+
+* PyTorch, Transformers, NumPy: `pip install -r requirements.txt`
+* auto-gptq for GPTQ base models and hqq for HQQ base models: `pip install -r requirements-quant.txt`
+* A CUDA GPU for quantized base models
