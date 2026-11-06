@@ -44,3 +44,13 @@ def test_returns_one_when_loss_rises_from_zero(sls):
     zdot = np.zeros((n, k))
     zdot[np.arange(n), y] = -1.0
     assert sls.scaling_factor(z1, zdot, y) == 1.0
+
+
+def test_returns_one_without_finite_minimizer(sls):
+    rng = np.random.default_rng(3)
+    n, k = 50, 3
+    y = rng.integers(0, k, n)
+    z1 = rng.normal(0.0, 1.0, (n, k))
+    zdot = np.zeros((n, k))
+    zdot[np.arange(n), y] = 1.0
+    assert sls.scaling_factor(z1, zdot, y) == 1.0
