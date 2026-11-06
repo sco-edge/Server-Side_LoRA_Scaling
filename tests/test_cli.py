@@ -19,3 +19,7 @@ def test_requires_label_words_with_template(sls):
 
 def test_rejects_batch_size_below_one(sls):
     assert _exit_code(sls, ["--task", "sst2", "--batch-size", "0"]) == 2
+
+
+def test_rejects_unknown_task(sls):
+    assert _exit_code(sls, ["--task", "mnli"]) == 2
