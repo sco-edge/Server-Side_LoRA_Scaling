@@ -69,3 +69,14 @@ def test_invariant_to_per_example_shift(sls):
     shift = np.random.default_rng(6).normal(0.0, 3.0, (len(y), 1))
     base = sls.scaling_factor(z1, zdot, y)
     assert sls.scaling_factor(z1 + shift, zdot + 0.1 * shift, y) == pytest.approx(base, rel=1e-9)
+
+
+def test_finds_minimizer_beyond_initial_bracket(sls):
+    zeros = np.zeros(2)
+    z1 = np.stack([zeros, np.array([-4.99, 4.999])], axis=1)
+    zdot = np.stack([zeros, np.array([0.01, -0.001])], axis=1)
+    y = np.array([1, 1])
+    s = sls.scaling_factor(z1, zdot, y)
+    h = 1e-4 * s
+    slope = (_approx_loss(z1, zdot, y, s + h) - _approx_loss(z1, zdot, y, s - h)) / (2 * h)
+    assert s > 100 and abs(slope) < 1e-8
