@@ -34,3 +34,13 @@ def test_matches_grid_minimizer_binary(sls):
 def test_matches_grid_minimizer_multiclass(sls, k):
     z1, zdot, y = _problem(1, k=k)
     assert sls.scaling_factor(z1, zdot, y) == pytest.approx(_grid_minimizer(z1, zdot, y), abs=2e-3)
+
+
+def test_returns_one_when_loss_rises_from_zero(sls):
+    rng = np.random.default_rng(2)
+    n, k = 50, 3
+    y = rng.integers(0, k, n)
+    z1 = rng.normal(0.0, 1.0, (n, k))
+    zdot = np.zeros((n, k))
+    zdot[np.arange(n), y] = -1.0
+    assert sls.scaling_factor(z1, zdot, y) == 1.0
