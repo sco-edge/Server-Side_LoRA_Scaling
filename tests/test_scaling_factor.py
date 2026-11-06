@@ -80,3 +80,8 @@ def test_finds_minimizer_beyond_initial_bracket(sls):
     h = 1e-4 * s
     slope = (_approx_loss(z1, zdot, y, s + h) - _approx_loss(z1, zdot, y, s - h)) / (2 * h)
     assert s > 100 and abs(slope) < 1e-8
+
+
+def test_rejects_non_finite_scores(sls):
+    with pytest.raises(RuntimeError):
+        sls.scaling_factor(np.array([[0.0, np.nan]]), np.zeros((1, 2)), np.array([0]))
