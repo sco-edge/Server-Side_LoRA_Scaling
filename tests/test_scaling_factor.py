@@ -62,3 +62,10 @@ def test_derivative_vanishes_at_estimate(sls):
     h = 1e-5 * s
     slope = (_approx_loss(z1, zdot, y, s + h) - _approx_loss(z1, zdot, y, s - h)) / (2 * h)
     assert s != 1.0 and abs(slope) < 1e-6
+
+
+def test_invariant_to_per_example_shift(sls):
+    z1, zdot, y = _problem(5, k=4)
+    shift = np.random.default_rng(6).normal(0.0, 3.0, (len(y), 1))
+    base = sls.scaling_factor(z1, zdot, y)
+    assert sls.scaling_factor(z1 + shift, zdot + 0.1 * shift, y) == pytest.approx(base, rel=1e-9)
