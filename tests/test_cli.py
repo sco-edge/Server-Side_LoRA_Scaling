@@ -11,3 +11,7 @@ def _exit_code(sls, args):
 
 def test_requires_task_or_template(sls):
     assert _exit_code(sls, []) == 2
+
+
+def test_requires_label_words_with_template(sls):
+    assert _exit_code(sls, ["--template", "{sentence} It was"]) == 2
