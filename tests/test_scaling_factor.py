@@ -28,3 +28,9 @@ def _grid_minimizer(z1, zdot, y, hi=20.0, n=20001):
 def test_matches_grid_minimizer_binary(sls):
     z1, zdot, y = _problem(0)
     assert sls.scaling_factor(z1, zdot, y) == pytest.approx(_grid_minimizer(z1, zdot, y), abs=2e-3)
+
+
+@pytest.mark.parametrize("k", [4, 5, 6])
+def test_matches_grid_minimizer_multiclass(sls, k):
+    z1, zdot, y = _problem(1, k=k)
+    assert sls.scaling_factor(z1, zdot, y) == pytest.approx(_grid_minimizer(z1, zdot, y), abs=2e-3)
