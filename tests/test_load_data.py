@@ -1,6 +1,9 @@
 import json
+from pathlib import Path
 
 import pytest
+
+EXAMPLES = Path(__file__).resolve().parents[1] / "examples"
 
 
 def _write(path, rows):
@@ -32,3 +35,14 @@ def test_keeps_non_string_fields(sls, tmp_path):
     data = _write(tmp_path / "d.jsonl", [{"text": " a ", "n": 3, "label": 0}])
     prompts, _ = sls.load_data(data, "{text} n={n}", 2)
     assert prompts == ["a n=3"]
+
+
+def test_every_task_has_an_example_file(sls):
+    assert all((EXAMPLES / f"{task}.jsonl").exists() for task in sls.TASKS)
+
+
+@pytest.mark.parametrize("task", ["sst2", "cr", "sst5", "subj", "trec", "agnews"])
+def test_example_files_load(sls, task):
+    template, words = sls.TASKS[task]
+    prompts, y = sls.load_data(str(EXAMPLES / f"{task}.jsonl"), template, len(words))
+    assert prompts and len(prompts) == len(y)
