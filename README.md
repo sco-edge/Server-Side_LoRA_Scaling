@@ -43,3 +43,15 @@ A JSON Lines file with one example per line: the task's text fields and an integ
 {"sentence": "A warm, funny film that never loses its heart.", "label": 1}
 ```
 Use `--task` for a built-in task, or `--template` and `--label-words` for any other task. See [examples](examples).
+
+## Built-in Tasks
+| Task | Template | Label words (label 0, 1, ...) |
+|---|---|---|
+| `sst2` | `{sentence} It was` | terrible, great |
+| `cr` | `{sentence} It was` | terrible, great |
+| `sst5` | `{sentence} It was` | terrible, bad, okay, good, great |
+| `subj` | `{sentence} This is` | objective, subjective |
+| `trec` | `Question: {question}\nType:` | Expression, Entity, Description, Human, Location, Number |
+| `agnews` | `{text}\nTopic:` | World, Sports, Business, Technology |
+
+Each label word is preceded by a space.
