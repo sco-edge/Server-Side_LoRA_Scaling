@@ -66,3 +66,10 @@ Each label word is preceded by a space.
 s_hat = 1.42
 ```
 `s_hat` is the factor by which to scale the aggregated adapter for this base model (the value above is only an example). If the approximate loss has no minimizer in `(0, inf)`, the script prints `s_hat = 1`.
+
+## Testing
+```bash
+pip install -r requirements-dev.txt
+pytest
+```
+The tests cover the scaling-factor computation, data loading, and argument checks, and run without PyTorch.
