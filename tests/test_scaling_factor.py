@@ -54,3 +54,11 @@ def test_returns_one_without_finite_minimizer(sls):
     zdot = np.zeros((n, k))
     zdot[np.arange(n), y] = 1.0
     assert sls.scaling_factor(z1, zdot, y) == 1.0
+
+
+def test_derivative_vanishes_at_estimate(sls):
+    z1, zdot, y = _problem(4)
+    s = sls.scaling_factor(z1, zdot, y)
+    h = 1e-5 * s
+    slope = (_approx_loss(z1, zdot, y, s + h) - _approx_loss(z1, zdot, y, s - h)) / (2 * h)
+    assert s != 1.0 and abs(slope) < 1e-6
