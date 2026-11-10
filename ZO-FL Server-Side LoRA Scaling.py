@@ -244,6 +244,8 @@ def main(argv=None):
         ap.error("specify --task, or both --template and --label-words")
     if a.batch_size < 1 or a.group_size < 1:
         ap.error("--batch-size and --group-size must be at least 1")
+    if a.max_len < 1:
+        ap.error("--max-len must be at least 1")
     device = a.device or ("cuda:0" if torch.cuda.is_available() else "cpu")
 
     prompts, y = load_data(a.data, template, len(words))
