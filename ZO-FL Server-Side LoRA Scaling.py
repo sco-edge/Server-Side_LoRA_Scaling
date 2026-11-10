@@ -101,7 +101,11 @@ class ScaledLoRA(torch.nn.Module):
 def attach_adapter(model, path, alpha=None):
     sd = torch.load(path, map_location="cpu", weights_only=True)
     layers = sorted(k[:-len(".lora_A")] for k in sd if k.endswith(".lora_A"))
-    if not layers or any(n + ".lora_B" not in sd for n in layers):
+    b_layers = {k[:-len(".lora_B")] for k in sd if k.endswith(".lora_B")}
+    unmatched = set(layers) ^ b_layers
+    if unmatched:
+        raise SystemExit(f"{path}: incomplete LoRA pairs for {', '.join(sorted(unmatched))}")
+    if not layers:
         raise SystemExit(f"{path}: no lora_A/lora_B pairs found")
     dev = next(model.parameters()).device
     owner = argparse.Namespace(s=1.0)
