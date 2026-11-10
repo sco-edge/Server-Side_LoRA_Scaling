@@ -31,16 +31,27 @@ def _class_label(value):
 
 
 def load_data(path, template, n_classes):
+    prompts, labels = [], []
     with open(path, encoding="utf-8") as f:
-        recs = [json.loads(line) for line in f if line.strip()]
-    if not recs:
+        for number, line in enumerate(f, 1):
+            if not line.strip():
+                continue
+            try:
+                record = json.loads(line)
+                if not isinstance(record, dict):
+                    raise ValueError("expected a JSON object")
+                fields = {k: v.strip() if isinstance(v, str) else v for k, v in record.items()}
+                prompt = template.format(**fields)
+                label = _class_label(record["label"])
+                if not 0 <= label < n_classes:
+                    raise ValueError(f"labels must be in 0..{n_classes - 1}")
+            except (ValueError, KeyError, IndexError, SystemExit) as exc:
+                raise SystemExit(f"{path}:{number}: {exc}") from exc
+            prompts.append(prompt)
+            labels.append(label)
+    if not prompts:
         raise SystemExit(f"{path}: no examples found")
-    prompts = [template.format(**{k: v.strip() if isinstance(v, str) else v for k, v in r.items()})
-               for r in recs]
-    y = np.array([_class_label(r["label"]) for r in recs])
-    if y.min() < 0 or y.max() >= n_classes:
-        raise SystemExit(f"{path}: labels must be in 0..{n_classes - 1}")
-    return prompts, y
+    return prompts, np.array(labels)
 
 
 QUANT_LINEAR = ("QuantLinear", "HQQLinear")
