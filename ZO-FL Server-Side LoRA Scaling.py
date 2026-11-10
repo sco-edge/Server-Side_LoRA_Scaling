@@ -20,12 +20,24 @@ TASKS = {
 
 
 def load_data(path, template, n_classes):
+    recs, prompts = [], []
     with open(path, encoding="utf-8") as f:
-        recs = [json.loads(line) for line in f if line.strip()]
+        for line_number, line in enumerate(f, start=1):
+            if not line.strip():
+                continue
+            try:
+                record = json.loads(line)
+                if not isinstance(record, dict):
+                    raise ValueError("expected a JSON object")
+                if "label" not in record:
+                    raise KeyError("label")
+                fields = {k: v.strip() if isinstance(v, str) else v for k, v in record.items()}
+                prompts.append(template.format(**fields))
+            except (ValueError, KeyError, IndexError) as exc:
+                raise SystemExit(f"{path}:{line_number}: {exc}") from exc
+            recs.append(record)
     if not recs:
         raise SystemExit(f"{path}: no examples found")
-    prompts = [template.format(**{k: v.strip() if isinstance(v, str) else v for k, v in r.items()})
-               for r in recs]
     y = np.array([int(r["label"]) for r in recs])
     if y.min() < 0 or y.max() >= n_classes:
         raise SystemExit(f"{path}: labels must be in 0..{n_classes - 1}")
