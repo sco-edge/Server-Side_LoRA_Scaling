@@ -162,8 +162,11 @@ def _jvp_ready(model):
                 if getattr(_m, "bias", None) is not None:
                     ty = ty - _m.bias.to(ty.dtype)
                 return fwAD.make_dual(y, ty.to(y.dtype))
+            if "forward" in vars(m):
+                undo.append(lambda m=m, previous=m.forward: setattr(m, "forward", previous))
+            else:
+                undo.append(lambda m=m: delattr(m, "forward"))
             m.forward = fwd
-            undo.append(lambda m=m: delattr(m, "forward"))
         elif isinstance(m, torch.nn.LayerNorm):
             undo.append(m.register_forward_hook(_match_tangent_dtype).remove)
     try:
