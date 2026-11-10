@@ -19,6 +19,17 @@ TASKS = {
 }
 
 
+def _class_label(value):
+    if type(value) is int:
+        return value
+    if isinstance(value, str):
+        try:
+            return int(value)
+        except ValueError:
+            pass
+    raise SystemExit(f"expected an integer class label, got {value!r}")
+
+
 def load_data(path, template, n_classes):
     with open(path, encoding="utf-8") as f:
         recs = [json.loads(line) for line in f if line.strip()]
@@ -26,7 +37,7 @@ def load_data(path, template, n_classes):
         raise SystemExit(f"{path}: no examples found")
     prompts = [template.format(**{k: v.strip() if isinstance(v, str) else v for k, v in r.items()})
                for r in recs]
-    y = np.array([int(r["label"]) for r in recs])
+    y = np.array([_class_label(r["label"]) for r in recs])
     if y.min() < 0 or y.max() >= n_classes:
         raise SystemExit(f"{path}: labels must be in 0..{n_classes - 1}")
     return prompts, y
