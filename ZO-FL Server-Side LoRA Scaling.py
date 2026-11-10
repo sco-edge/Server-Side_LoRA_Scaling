@@ -246,13 +246,15 @@ def main(argv=None):
     ap.add_argument("--lora-alpha", type=float, default=None, help="LoRA alpha (default: r)")
     ap.add_argument("--data", required=True, help="server validation data (.jsonl)")
     ap.add_argument("--task", choices=sorted(TASKS), default="", help="built-in task")
-    ap.add_argument("--template", default="", help="prompt template used instead of --task")
+    ap.add_argument("--template", default=None, help="prompt template used instead of --task")
     ap.add_argument("--label-words", nargs="+", default=None, help="label words used instead of --task")
     ap.add_argument("--batch-size", type=int, default=16)
     ap.add_argument("--max-len", type=int, default=192)
     ap.add_argument("--device", default="")
     a = ap.parse_args(argv)
 
+    if a.task and (a.template is not None or a.label_words is not None):
+        ap.error("--task cannot be combined with --template or --label-words")
     template, words = TASKS[a.task] if a.task else (a.template, a.label_words)
     if not template or not words:
         ap.error("specify --task, or both --template and --label-words")
