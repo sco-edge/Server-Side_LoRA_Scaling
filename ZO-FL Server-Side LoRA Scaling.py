@@ -262,6 +262,8 @@ def main(argv=None):
         ap.error("--batch-size and --group-size must be at least 1")
     if a.max_len < 1:
         ap.error("--max-len must be at least 1")
+    if a.lora_alpha is not None and not np.isfinite(a.lora_alpha):
+        ap.error("--lora-alpha must be finite")
     device = a.device or ("cuda:0" if torch.cuda.is_available() else "cpu")
 
     prompts, y = load_data(a.data, template, len(words))
