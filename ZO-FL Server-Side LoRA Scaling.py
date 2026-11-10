@@ -62,13 +62,13 @@ def hqq_quantize(model, bits, group_size, device):
 
 
 def load_base(model_path, quant, device, gptq_dir="", bits=4, group_size=32):
-    from transformers import AutoModelForCausalLM, AutoTokenizer
-    tok = AutoTokenizer.from_pretrained(model_path)
     if quant != "fp16" and not device.startswith("cuda"):
         raise SystemExit(f"--quant {quant} requires a GPU")
+    if quant == "gptq" and not gptq_dir:
+        raise SystemExit("--quant gptq requires --gptq-dir")
+    from transformers import AutoModelForCausalLM, AutoTokenizer
+    tok = AutoTokenizer.from_pretrained(model_path)
     if quant == "gptq":
-        if not gptq_dir:
-            raise SystemExit("--quant gptq requires --gptq-dir")
         from auto_gptq import AutoGPTQForCausalLM
         model = AutoGPTQForCausalLM.from_quantized(
             gptq_dir, device=device, inject_fused_attention=False, inject_fused_mlp=False).model
