@@ -138,6 +138,8 @@ def _class_scores(model, tok, prompts, word_ids, max_len):
     pad_id = tok.pad_token_id if tok.pad_token_id is not None else (tok.eos_token_id or 0)
     budget = max_len - max(len(w) for w in word_ids)
     heads = [tok(p).input_ids[-budget:] for p in prompts]
+    if any(not head for head in heads):
+        raise ValueError("every prompt must tokenize to at least one token")
     if all(len(w) == 1 for w in word_ids):
         ids, mask = _pad(heads, pad_id, device)
         logp = _logp_at(model, ids, mask, [[len(h) - 1] for h in heads])
