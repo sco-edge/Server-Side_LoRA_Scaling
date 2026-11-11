@@ -32,7 +32,7 @@ python "ZO-FL Server-Side LoRA Scaling.py" \
 ```
 
 * HQQ base model: `--quant hqq --bits 4 --group-size 32`
-* fp16 base model: omit `--quant`
+* FP16 base model: omit `--quant`
 * `--batch-size` (default 16) and `--max-len` (default 192) set the batch size and prompt length of the forward pass.
 * `--device` selects the device (default: CUDA if available).
 
