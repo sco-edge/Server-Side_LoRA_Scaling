@@ -265,7 +265,7 @@ def main(argv=None):
     ap.add_argument("--task", choices=sorted(TASKS), default="", help="built-in task")
     ap.add_argument("--template", default=None, help="prompt template used instead of --task")
     ap.add_argument("--label-words", nargs="+", default=None, help="label words used instead of --task")
-    ap.add_argument("--batch-size", type=int, default=16)
+    ap.add_argument("--batch-size", type=int, default=16, help="batch size of the forward pass")
     ap.add_argument("--max-len", type=int, default=192)
     ap.add_argument("--device", default="")
     a = ap.parse_args(argv)
